@@ -94,3 +94,22 @@ def G(x,y):
 
 N=Newton(G,c,c)
 print(N,f1(N[0],N[1]))
+
+#sans la contrainte de la direction c'est juste Newton
+def fonction1(f,x0,y0,delta,eps):
+    def H(x,y):
+        return np.array([f1(x,y)-c,(x0-x)**2+(y0-y)**2-delta])
+    return Newton(H,x0,y0,eps,100)
+
+
+def level_curve(f, x0, y0, delta=0.1, N=1000, eps=eps):
+    res=np.zeros((2,N))
+    res[0][0],res[1][0]=x0,y0
+    for i in range (1,N):
+        x,y=fonction1(f,x0,y0,delta,eps)
+        res[0][i],res[1][i]=x,y
+        x0,y0=x,y
+    return res
+   
+print(level_curve(f1, 0.6,0.8))
+#bon ça marche pas j'ai l'impression que ça marche pas parceque la jacobienne est pas inversible à un moment
