@@ -128,14 +128,15 @@ def intersectiondroite(f,x0,y0,delta):
     grad_f = grad(f)
     g=grad_f(x0, y0)
     new_norme=delta/np.sqrt(g[0]**2+g[1]**2)
-    ortho=[-g[1]*new_norme,g[0]*new_norme]
+    ortho=[g[1]*new_norme,-g[0]*new_norme]
     return (x0+ortho[0],y0+ortho[1])
 
 
 #interctiondroite(f1,0.6,0.6,2)
 
-def level_curve(f, x0, y0, delta=0.1, N=1000, eps=eps):
+def level_curve(f, x0, y0, delta=0.1, N=40, eps=eps):
     res=np.zeros((2,N))
+    c=f(x0,y0)
     for i in range (N):
         def T3(x,y):
             return np.array([f(x,y)-c,(x0-x)**2+(y0-y)**2-delta**2])
@@ -145,4 +146,12 @@ def level_curve(f, x0, y0, delta=0.1, N=1000, eps=eps):
         x0,y0=x2,y2
     return res
 
-print(level_curve(f2, 0.8,0.8))
+LC=level_curve(f1, 0.4,0.7)
+
+print(LC,c)
+plt.plot(LC[0],LC[1],'bo',color='green')
+i=1
+for x, y in zip(LC[0], LC[1]):
+    plt.text(x, y, str(i), color="green", fontsize=12)
+    i+=1
+plt.show()
