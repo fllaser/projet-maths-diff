@@ -68,9 +68,13 @@ def f1(x1, x2):
 def f2(x1, x2):
     return (x1 - 1)**2 + (x1 - x2**2)**2
 
+def f3(x, y):
+    return np.sin(x + y) - np.cos(x * y) - 1 + 0.001 * (x * x + y * y) 
+
 
 N=100
 eps=1e-10
+delta=0.1
 
 Pointsx=[]
 Pointsy=[]
@@ -138,7 +142,7 @@ def intersectiondroite(f,x0,y0,delta):
 
 #interctiondroite(f1,0.6,0.6,2)
 
-def level_curve(f, x0, y0, delta=0.1, N=40, eps=eps):
+def level_curve(f, x0, y0, N=1000, delta=delta, eps=eps):
     res=np.zeros((2,N))
     c=f(x0,y0)
     for i in range (N):
@@ -146,16 +150,148 @@ def level_curve(f, x0, y0, delta=0.1, N=40, eps=eps):
             return np.array([f(x,y)-c,(x0-x)**2+(y0-y)**2-delta**2])
         x1,y1=intersectiondroite(f,x0,y0,delta)
         x2,y2=Newton(T3,x1,y1,eps)
-        res[0][i],res[1][i]=x2,y2
+        res[0][i],res[1][i]=x0,y0
         x0,y0=x2,y2
     return res
 
-LC=level_curve(f1, 0.4,0.7)
 
-print(LC)
+#Pour f1
+"""
+LC=level_curve(f1, 0.4,0.7,40)
+
 plt.plot(LC[0],LC[1],'bo',color='green')
 i=1
 for x, y in zip(LC[0], LC[1]):
     plt.text(x, y, str(i), color="green", fontsize=12)
     i+=1
+#dessiner les cercles evt
+
+
 plt.show()
+
+
+##même chose pour f2
+plt.clf()
+LC2=level_curve(f2, 0.5,0.8,30)
+
+display_contour(
+    f2, 
+    x=np.linspace(-1.0, 3.0, 100), 
+    y=np.linspace(-2.0, 2.0, 100), 
+    levels=[2**i for i in range(-3, 8)] # levels: [0.125, 0.25, ..., 64, 128]
+)
+
+
+
+plt.plot(LC2[0],LC2[1],'bo',color='green')
+i=1
+for x, y in zip(LC2[0], LC2[1]):
+    plt.text(x, y, str(i), color="green", fontsize=12)
+    i+=1
+plt.show()
+"""
+
+#Tâche 4
+#Première implémentation en considérant qu'il suffit de tester que avec le premier
+"""
+LC2=level_curve(f2, 0.5,1.0,60)
+
+display_contour(
+    f2, 
+    x=np.linspace(-1.0, 3.0, 100), 
+    y=np.linspace(-2.0, 2.0, 100), 
+    levels=[2**i for i in range(-3, 8)] # levels: [0.125, 0.25, ..., 64, 128]
+)
+
+plt.plot(LC2[0],LC2[1],'bo',color='green')
+i=1
+for x, y in zip(LC2[0], LC2[1]):
+    plt.text(x, y, str(i), color="green", fontsize=12)
+    i+=1
+plt.show()
+
+#Problème lorsque l'on commence sur une telle courbe de niveau (la fonction précedente oscille autour du croisement)
+"""
+
+
+def level_curve2(f, x0, y0, N=1000, delta=delta, eps=eps):
+    res=np.zeros((2,N))
+    c=f(x0,y0)
+    xinit,yinit=x0,y0
+
+    i=0
+    while i<2 or (x0-xinit)**2+(y0-yinit)**2>delta**2:
+        def T3(x,y):
+            return np.array([f(x,y)-c,(x0-x)**2+(y0-y)**2-delta**2])
+        x1,y1=intersectiondroite(f,x0,y0,delta)
+        x2,y2=Newton(T3,x1,y1,eps)
+        res[0][i],res[1][i]=x2,y2
+        x0,y0=x2,y2
+        i+=1
+
+    resf=res[:,:i]
+    
+    return resf
+
+
+
+
+"""
+LC22=level_curve2(f2, 0.1,0.8)
+
+display_contour(
+    f2, 
+    x=np.linspace(-1.0, 3.0, 100), 
+    y=np.linspace(-2.0, 2.0, 100), 
+    levels=[2**i for i in range(-3, 8)] # levels: [0.125, 0.25, ..., 64, 128]
+)
+
+
+
+plt.plot(LC22[0],LC22[1],'bo',color='green')
+i=1
+for x, y in zip(LC22[0], LC22[1]):
+    plt.text(x+0.03, y, str(i), color="green", fontsize=12)
+    i+=1
+plt.show()
+"""
+
+
+#2 problèmes
+#1e problème
+"""
+LC2P1=level_curve(f2, 0.5,1.0,60)
+
+display_contour(
+    f2, 
+    x=np.linspace(-1.0, 3.0, 100), 
+    y=np.linspace(-2.0, 2.0, 100), 
+    levels=[2**i for i in range(-3, 8)] # levels: [0.125, 0.25, ..., 64, 128]
+)
+
+plt.plot(LC2P1[0],LC2P1[1],'bo',color='green')
+i=1
+for x, y in zip(LC2P1[0], LC2P1[1]):
+    plt.text(x, y, str(i), color="green", fontsize=12)
+    i+=1
+plt.show()
+
+#Problème lorsque l'on commence sur une telle courbe de niveau (la fonction précedente oscille autour du croisement)
+
+#2e probleme
+LC2P2=level_curve(f2, 0.48,0.0,60)
+
+display_contour(
+    f2, 
+    x=np.linspace(-1.0, 3.0, 100), 
+    y=np.linspace(-2.0, 2.0, 100), 
+    levels=[2**i for i in range(-3, 8)] # levels: [0.125, 0.25, ..., 64, 128]
+)
+
+plt.plot(LC2P2[0],LC2P2[1],'bo',color='green')
+i=1
+for x, y in zip(LC2P2[0], LC2P2[1]):
+    plt.text(x, y, str(i), color="green", fontsize=12)
+    i+=1
+plt.show()
+"""
