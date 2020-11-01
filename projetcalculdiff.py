@@ -76,6 +76,8 @@ Pointsx=[]
 Pointsy=[]
 
 
+##Täche 1
+
 def Newton(F, x0, y0, eps=eps, N=N):
     Jacf=J(F)
     Pointsx.append(x0)
@@ -96,6 +98,7 @@ def Newton(F, x0, y0, eps=eps, N=N):
         raise ValueError(f"no convergence in {N} steps.")
 
 
+#Tâche 2
 
 c=0.8
 
@@ -123,6 +126,7 @@ plt.plot([-1,1],[-1,1],'--')
 
 
 
+#Tâche 3
 
 def intersectiondroite(f,x0,y0,delta):
     grad_f = grad(f)
@@ -148,7 +152,7 @@ def level_curve(f, x0, y0, delta=0.1, N=40, eps=eps):
 
 LC=level_curve(f1, 0.4,0.7)
 
-print(LC,c)
+print(LC)
 plt.plot(LC[0],LC[1],'bo',color='green')
 i=1
 for x, y in zip(LC[0], LC[1]):
